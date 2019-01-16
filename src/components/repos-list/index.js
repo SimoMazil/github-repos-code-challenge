@@ -6,20 +6,62 @@ import { dateBeforeOneMonth } from '../../utils/getDates'
 
 class ReposList extends Component {
   state = {
-    repos: []
+    repos: [],
+    page: 1,
+    results: false,
+    scrolling: false
   }
 
   componentWillMount() {
     this.loadRepos()
+    this.scrollListener = window.addEventListener('scroll', (e) => {
+      this.handleScroll()
+    })
+  }
+
+  handleScroll = () => {
+    const { scrolling, results } = this.state
+    
+    if(scrolling) return
+    if(!results) return
+    
+    const lastItem = document.querySelector('div.items > div.item:last-child')
+    const lastItemOffset = lastItem && lastItem.offsetTop + lastItem.clientHeight
+    const pageOffset = window.pageYOffset + window.innerHeight
+    const bottomOffset = 50
+    
+    if (pageOffset > lastItemOffset - bottomOffset) {
+      this.loadMoreRepos()
+    }
+    
   }
 
   loadRepos = async () => {
     const dateQuery = dateBeforeOneMonth()
-    const response = await fetch(`https://api.github.com/search/repositories?q=created:>${dateQuery}&sort=stars&order=desc`)
+    const page = this.state.page
+
+    const response = await fetch(`https://api.github.com/search/repositories?q=created:>${dateQuery}&page=${page}&sort=stars&order=desc`)
     const data = await response.json()
-    this.setState({
-      repos: data.items
-    })
+    
+    if(data.items && data.items.length > 0) {
+      this.setState({
+        repos: [...this.state.repos, ...data.items],
+        results: true,
+        scrolling: false
+      })
+    } else {
+      this.setState({
+        results: false,
+        scrolling: false
+      })
+    }
+  }
+
+  loadMoreRepos = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+      scrolling: true,
+    }), this.loadRepos)
   }
 
   render() {
@@ -28,7 +70,7 @@ class ReposList extends Component {
       <Container>
         <Item.Group divided>
           {
-            repos && repos.map(repo => <Repo key={repo.id} details={repo}/>)
+            repos.map(repo => <Repo key={repo.id} details={repo}/>)
           }
         </Item.Group>
       </Container>
