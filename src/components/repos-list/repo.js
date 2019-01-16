@@ -1,18 +1,23 @@
 import React from 'react';
 import { Item } from 'semantic-ui-react'
 
-const Repo = () => {
+import { datesDiffInDays } from '../../utils/getDates'
+
+const Repo = ({details}) => {
+  const { name, description, stargazers_count, watchers_count, created_at } = details
+  const { avatar_url, login } = details.owner
+  
   return (
     <Item>
-      <Item.Image size='tiny' src='https://identicons.github.com/jasonlong.png' />
+      <Item.Image size='tiny' src={avatar_url} />
 
       <Item.Content>
-        <Item.Header>Repo Title</Item.Header>
-        <Item.Meta>Repo Description</Item.Meta>
+        <Item.Header>{name}</Item.Header>
+        <Item.Meta>{description}</Item.Meta>
         <Item.Extra>
-          <span>Stars: 000</span>
-          <span>Issues: 000</span>
-          <span>submitted 30 days ago by Owner</span>
+          <span>Stars: {stargazers_count}</span>
+          <span>Issues: {watchers_count}</span>
+          <span>submitted {datesDiffInDays(created_at, new Date())} days ago by {login}</span>
         </Item.Extra>
       </Item.Content>
     </Item>
