@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Item } from 'semantic-ui-react'
+import { Container, Item, Loader } from 'semantic-ui-react'
 
 import Repo from './repo';
 import { dateBeforeOneMonth } from '../../utils/getDates'
@@ -9,7 +9,8 @@ class ReposList extends Component {
     repos: [],
     page: 1,
     results: false,
-    scrolling: false
+    scrolling: false,
+    loading: true
   }
 
   componentWillMount() {
@@ -47,12 +48,14 @@ class ReposList extends Component {
       this.setState({
         repos: [...this.state.repos, ...data.items],
         results: true,
-        scrolling: false
+        scrolling: false,
+        loading: false
       })
     } else {
       this.setState({
         results: false,
-        scrolling: false
+        scrolling: false,
+        loading: false
       })
     }
   }
@@ -61,11 +64,12 @@ class ReposList extends Component {
     this.setState(prevState => ({
       page: prevState.page + 1,
       scrolling: true,
+      loading: true
     }), this.loadRepos)
   }
 
   render() {
-    const { repos } = this.state 
+    const { repos, loading } = this.state 
     return (
       <Container>
         <Item.Group divided>
@@ -73,6 +77,9 @@ class ReposList extends Component {
             repos.map(repo => <Repo key={repo.id} details={repo}/>)
           }
         </Item.Group>
+        {
+          loading && <Loader active inline='centered' />
+        }
       </Container>
     );
   }
