@@ -29,5 +29,5 @@ Check your localhost at:
 http://localhost:3000
 ```
 
-🎉 🥳
+🎉
 
