@@ -29,7 +29,7 @@ class ReposList extends Component {
     const lastItem = document.querySelector('div.items > div.item:last-child')
     const lastItemOffset = lastItem && lastItem.offsetTop + lastItem.clientHeight
     const pageOffset = window.pageYOffset + window.innerHeight
-    const bottomOffset = 50
+    const bottomOffset = 100
     
     if (pageOffset > lastItemOffset - bottomOffset) {
       this.loadMoreRepos()
