@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Container, Item, Loader } from 'semantic-ui-react'
 
 import Repo from './repo';
+
+import fetchRepos from '../../services/fetchRepos';
 import { dateBeforeOneMonth } from '../../utils/getDates'
 
 class ReposList extends Component {
@@ -41,12 +43,11 @@ class ReposList extends Component {
     const dateQuery = dateBeforeOneMonth()
     const page = this.state.page
 
-    const response = await fetch(`https://api.github.com/search/repositories?q=created:>${dateQuery}&page=${page}&sort=stars&order=desc`)
-    const data = await response.json()
+    const items = await fetchRepos(dateQuery, page)
     
-    if(data.items && data.items.length > 0) {
+    if(items && items.length > 0) {
       this.setState({
-        repos: [...this.state.repos, ...data.items],
+        repos: [...this.state.repos, ...items],
         results: true,
         scrolling: false,
         loading: false
