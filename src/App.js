@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReposList from './components/repos-list';
+import ReposList from './components/ReposList';
 
 class App extends Component {
   render() {

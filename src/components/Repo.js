@@ -1,7 +1,7 @@
 import React from 'react';
 import { Item, Icon, Label } from 'semantic-ui-react'
 
-import { datesDiffInDays } from '../../utils/getDates'
+import { datesDiffInDays } from '../utils/getDates'
 
 const Repo = ({details}) => {
   const { name, description, stargazers_count, watchers_count, created_at } = details

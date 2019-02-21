@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Container, Item, Loader } from 'semantic-ui-react'
 
-import Repo from './repo';
+import Repo from './Repo';
 
-import fetchRepos from '../../services/fetchRepos';
-import { dateBeforeOneMonth } from '../../utils/getDates'
+import fetchRepos from '../services/fetchRepos';
+import { dateBeforeOneMonth } from '../utils/getDates'
 
 class ReposList extends Component {
   state = {
