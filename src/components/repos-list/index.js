@@ -17,26 +17,17 @@ class ReposList extends Component {
 
   componentWillMount() {
     this.loadRepos()
-    this.scrollListener = window.addEventListener('scroll', (e) => {
-      this.handleScroll()
-    })
   }
 
-  handleScroll = () => {
-    const { scrolling, results } = this.state
-    
-    if(scrolling) return
-    if(!results) return
-    
-    const lastItem = document.querySelector('div.items > div.item:last-child')
-    const lastItemOffset = lastItem && lastItem.offsetTop + lastItem.clientHeight
-    const pageOffset = window.pageYOffset + window.innerHeight
-    const bottomOffset = 100
-    
-    if (pageOffset > lastItemOffset - bottomOffset) {
-      this.loadMoreRepos()
-    }
-    
+  scrollObserver() {
+    const observe = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.intersectionRatio > 0) {
+          this.loadMoreRepos()
+        }
+      })
+    })
+    observe.observe(document.querySelector('div.end-of-page'))
   }
 
   loadRepos = async () => {
@@ -52,6 +43,7 @@ class ReposList extends Component {
         scrolling: false,
         loading: false
       })
+      this.scrollObserver()
     } else {
       this.setState({
         results: false,
@@ -81,6 +73,7 @@ class ReposList extends Component {
         {
           loading && <Loader active inline='centered' />
         }
+        <div className="end-of-page"></div>
       </Container>
     );
   }
